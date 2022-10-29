@@ -1,0 +1,22 @@
+{% block header %}
+  <h1>{% block title %}MediaMan Zip Detail{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    <div>Name: {{ data.item.name }}</div>
+    <div>Size: {{ data.item.size }}</div>
+    <div>
+        <!-- <a download="{{ data.item.name }}" href="{{ data.media_host }}/download/{{ data.item.hashes[0] }}">Download</a> -->
+        <a download="{{ data.item.name }}" href="/download/{{ data.item.hashes[0] }}">Download</a>
+    </div>
+    <div>Zip items ({{ data.zipview.filelist | length }}):</div>
+    <ul>
+        {% for zipitem in data.zipview.filelist %}
+            {% if not zipitem.filename.endswith("/") and not zipitem.filename.startswith("__") and ".DS_Store" not in zipitem.filename %}
+                <li>
+                    <a href="/zipget/{{ data.item.hashes[0] }}/{{ zipitem.filename | b64encode }}">{{ zipitem.filename }}</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+{% endblock %}

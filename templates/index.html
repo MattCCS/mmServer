@@ -1,0 +1,20 @@
+{% block header %}
+  <h1>{% block title %}MediaMan{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    {% if data.user %}
+        <div>Welcome {{ data.user }}!</div>
+    {% endif %}
+    <div>data.test: {{ data.test }} </div>
+    {% for item in data.list %}
+        <div>
+            {% if item.name.endswith(".zip") %}
+                <!-- <a href="{{ data.media_host }}/zipdetail/{{ item.hashes[0] }}">ZIP: {{ item.name }}</a> ({{ item.service }}) -->
+                <a href="/zipdetail/{{ item.hashes[0] }}">ZIP: {{ item.name }}</a> ({{ item.service }})
+            {% else %}
+                <a href="/detail/{{ item.hashes[0] }}">{{ item.name }}</a> ({{ item.service }})
+            {% endif %}
+        </div>
+    {% endfor %}
+{% endblock %}

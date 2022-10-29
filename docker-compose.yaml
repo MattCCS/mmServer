@@ -1,0 +1,16 @@
+services:
+  flask:
+    image: mattccs-mmserver-back
+    container_name: back
+    build: ./mmServer-back
+    ports:
+      - "5001:5001"
+  react:
+    image: mattccs-mmserver-front
+    container_name: front
+    build: ./mmServer-front
+    ports:
+      - "5000:5000"
+    stdin_open: true
+    depends_on:
+      - flask

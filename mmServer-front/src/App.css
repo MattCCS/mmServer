@@ -1,0 +1,147 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.link {
+    stroke: #c1c1c1;
+    stroke-width: 2px;
+    pointer-events: all;
+  }
+
+.node circle {
+  pointer-events: all;
+  stroke: #777;
+  stroke-width: 1px;
+}
+
+
+div.tooltip {
+  position: absolute;
+  background-color: white;
+  max-width: 200px;
+  height: auto;
+  padding: 1px;
+  border-style: solid;
+  border-radius: 4px;
+  border-width: 1px;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, .5);
+  pointer-events: none;
+}
+
+
+/* https://bl.ocks.org/cjrd/6863459 */
+.conceptG text{
+    pointer-events: none;
+}
+
+marker{
+    fill: #333;
+}
+
+g.conceptG circle{
+    fill: #F6FBFF;
+    stroke: #333;
+    stroke-width: 2px;
+}
+
+g.conceptG:hover circle{
+    fill: rgb(200, 238, 241);
+}
+
+g.selected circle{
+    fill: rgb(250, 232, 255);
+}
+g.selected:hover circle{
+    fill: rgb(250, 232, 255);
+}
+
+/*path.link {*/
+.link {
+    fill: none;
+    stroke: #333;
+    stroke-width: 6px;
+    cursor: default;
+}
+
+.templink {
+    fill: none;
+    stroke: #333;
+    stroke-width: 6px;
+    cursor: default;
+}
+
+/*path.link:hover{*/
+.link:hover{
+    stroke: rgb(94, 196, 204);
+}
+
+g.connect-node circle{
+    fill: #BEFFFF;
+}
+
+/*path.link.hidden{*/
+.link.hidden{
+    stroke-width: 0;
+}
+
+.templink.hidden{
+    stroke-width: 0;
+}
+
+/*path.link.selected {*/
+.link.selected {
+    /*stroke: rgb(229, 172, 247);*/
+    stroke: rgb(255,0,0)
+}
+
+.noselect {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.mc-button {
+  margin: 10px;
+}
+
+.mc-pad {
+  padding: 1rem;
+}

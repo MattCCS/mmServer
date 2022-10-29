@@ -1,0 +1,64 @@
+### SYSTEM
+# Mac
+*.DS_Store
+
+# swap files
+*.swp
+
+# logs
+*.out
+
+### BACKEND
+# Python
+*.pyc
+
+# virtualenv
+.Python
+bin/
+include/
+lib/
+pip-selfcheck.json
+venv/
+
+# Config
+*.json
+
+### FRONTEND
+node_modules
+dist
+lib
+coverage
+es
+temp/
+react-redux-*/
+.vscode/
+
+.cache/
+.yarn/cache/
+website/.yarn/
+.yarnrc
+.yarn/*
+!.yarn/patches
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
+*.tgz
+
+.yalc
+yalc.lock
+yalc.sig
+
+lib/core/metadata.js
+lib/core/MetadataBlog.js
+
+website/translated_docs
+website/build/
+website/node_modules
+website/i18n/*
+
+### INFRA
+# Docker
+.env
+

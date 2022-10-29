@@ -1,0 +1,21 @@
+{% block header %}
+  <h1>{% block title %}MediaMan Detail{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    <div>Name: {{ data.item.name }}</div>
+    <div>Size: {{ data.item.size }}</div>
+    <div>
+        <a href="/view/{{ data.item.hashes[0] }}">View</a>
+        <a href="/stream/{{ data.item.hashes[0] }}">Raw</a>
+        <a download="{{ data.item.name }}" href="/download/{{ data.item.hashes[0] }}">Download</a>
+
+        <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
+        <form action="/api/cast/{{ data.item.hashes[0] }}" target="dummyframe">
+            <button>Cast to TV</button>
+        </form>
+    </div>
+    <div>
+        {% include 'view.html' %}
+    </div>
+{% endblock %}
