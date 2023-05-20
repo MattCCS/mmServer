@@ -17,7 +17,8 @@ const notify = (err) => toast.error(err);
 const seekDebounce = _.debounce((val, callback) => callback(val), 500)
 const volumeDebounce = _.debounce((val, callback) => callback(val), 20)
 
-const REACT_APP_PROXY = process.env.REACT_APP_PROXY
+// const REACT_APP_PROXY = process.env.REACT_APP_PROXY
+const REACT_APP_PROXY = `http://${window.location.hostname}:5001`  // TODO(mcotton): read env data from API call
 console.log(REACT_APP_PROXY)
 
 
