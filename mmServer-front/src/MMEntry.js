@@ -8,7 +8,8 @@ import toast, { Toaster } from 'react-hot-toast';
 import MMEntryPreview from "./MMEntryPreview.js"
 
 
-const REACT_APP_PROXY = process.env.REACT_APP_PROXY
+// const REACT_APP_PROXY = process.env.REACT_APP_PROXY
+const REACT_APP_PROXY = `http://${window.location.hostname}:5001`  // TODO(mcotton): read env data from API call
 
 
 const MMEntry = (props) => {

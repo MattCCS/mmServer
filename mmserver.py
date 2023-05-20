@@ -2,6 +2,7 @@
 """
 
 import base64
+import collections  # To patch a py3.10 issue
 import functools
 import json
 import logging
@@ -17,13 +18,15 @@ from flask import Flask, request, Request, Response, render_template
 from flask_cors import CORS
 import requests
 
+collections.Callable = collections.abc.Callable  # SOURCE: https://stackoverflow.com/a/70641487
+
 import httplib2shim  # NOTE: fixes non-thread-safe httplib2 problems caused by Google's API library
 httplib2shim.patch()
 
 os.environ["MMROOT"] = "~/.mediaman/"
 sys.path.append(os.environ["MEDIAMAN_REPO_PATH"])
 from mediaman.core import api, logtools, policy  # noqa
-logtools.set_level("INFO")
+logtools.set_level("DEBUG")
 import subtitles  # noqa
 import zipstream  # noqa
 
@@ -117,6 +120,7 @@ def reload_list():
     CLIENTS = {}
     ZIPVIEWS = {}
 
+    logger.info("mmServer ready to serve.")
     return str(len(ITEMS))
 
 
