@@ -175,13 +175,14 @@ class AuthMiddleware:
         username = request.authorization["username"]
         cert_hash = request.environ["HTTP_X_SSL_CERT_FINGERPRINT"]
         target_cert_hash = USERS.get(username, {}).get("cert")
+        target_cert_hashes = [target_cert_hash] if isinstance(target_cert_hash, str) else target_cert_hash
 
         # if not target_cert_hash:
         #     error = "This user's access has been revoked.  Contact your administrator."
         #     res = Response(error, mimetype= 'text/plain', status=401)
         #     return res(environ, start_response)
 
-        if cert_hash != target_cert_hash:
+        if cert_hash not in target_cert_hashes:
             error = "Mismatch between provided certificate and preregistered certificate hash.  Contact your administrator."
             res = Response(error, mimetype= 'text/plain', status=401)
             return res(environ, start_response)
@@ -237,7 +238,8 @@ def get_api_list():
         username = request.authorization["username"]
         cert_hash = request.environ["HTTP_X_SSL_CERT_FINGERPRINT"]
         target_cert_hash = USERS.get(username, {}).get("cert")
-        if cert_hash != target_cert_hash:
+        target_cert_hashes = [target_cert_hash] if isinstance(target_cert_hash, str) else target_cert_hash
+        if cert_hash not in target_cert_hashes:
             errors = ["Mismatch between provided cert and preregistered certificate hash.  Contact your administrator."]
             return {
                 "username": None,
@@ -476,4 +478,4 @@ def stream(hash):
 #     app.run(threaded=False)
 
 reload_list()
-app.run(threaded=False)
+app.run(threaded=False, host="0.0.0.0", port=5001)
