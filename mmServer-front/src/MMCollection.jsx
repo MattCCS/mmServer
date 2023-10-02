@@ -76,6 +76,7 @@ const episodeTemplate = (series, season, episode, entryList, setDetailEntryEvent
 const seasonTemplate = (series, season, episodesMap, setDetailEntryEvent) => {
     console.log(season);
     console.log(episodesMap);
+    const episodesByNumber = Array.from(episodesMap.keys()).sort((a,b) => parseInt(a) - parseInt(b))
 
     const title = season ? `Season ${season}` : `Unsorted episodes`;
     return (
@@ -87,7 +88,9 @@ const seasonTemplate = (series, season, episodesMap, setDetailEntryEvent) => {
             </h2>
             <UncontrolledCollapse toggler={`#toggle-season-${season}`}>
                 <CardColumns key={`${series}-${season}`}>
-                    {Array.from(episodesMap.keys()).sort(parseInt).map(episode => episodeTemplate(series, season, episode, episodesMap.get(episode), setDetailEntryEvent))}
+                    {episodesByNumber.map(episode => episodeTemplate(
+                        series, season, episode, episodesMap.get(episode), setDetailEntryEvent
+                    ))}
                 </CardColumns>
             </UncontrolledCollapse>
         </Card>
@@ -97,11 +100,14 @@ const seasonTemplate = (series, season, episodesMap, setDetailEntryEvent) => {
 
 const seasonsTemplate = (series, seasonsMap, setDetailEntryEvent) => {
     console.log(seasonsMap);
+    const seasonsByName = Array.from(seasonsMap.keys()).sort()
     return (
         <>
             <h1>{series}</h1>
             <div style={{flex: 4, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", flexWrap: "wrap"}}>
-                {Array.from(seasonsMap.keys()).sort().map(season => seasonTemplate(series, season, seasonsMap.get(season), setDetailEntryEvent))}
+                {seasonsByName.map(season => seasonTemplate(
+                    series, season, seasonsMap.get(season), setDetailEntryEvent
+                ))}
             </div>
         </>
     );
