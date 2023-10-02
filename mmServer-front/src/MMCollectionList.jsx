@@ -84,9 +84,12 @@ export const MMCollectionList = (props) => {
         dispatch(setCollectionEntry(entry));
     }
 
+    const seriesByName = Array.from(series.values())
+        .sort((a,b) => a.get(`name`).localeCompare(b.get(`name`)));
+
     return (
         <div style={{display: "flex"}}>
-            {listEntriesTemplate(Array.from(series.values()))}
+            {listEntriesTemplate(seriesByName)}
         </div>
     );
 }
