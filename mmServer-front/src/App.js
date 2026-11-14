@@ -18,10 +18,11 @@ const App = () => {
 
     return (
         <div className="App">
-            <header className="App-header" style={{'min-height': '10vh'}}>
+            <header className="App-header" style={{'min-height': '5vh'}}>
                 <div>📺 mmServer</div>
             </header>
 
+            {/*<Card className='bg-dark'>*/}
             <Card>
                 <CardBody>
                     <MMEntry />

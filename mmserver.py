@@ -208,6 +208,37 @@ def index():
     return render_template("index.html", data={'user': username, 'test': 123, 'list': items, 'media_host': MEDIA_HOST_URL})  # TODO: FIXME
 
 
+@app.route("/api/tag/<hash>", methods=['POST'])
+def api_add_tag(hash):
+    tag = request.json["tag"]
+    return add_tag(hash=hash, tag=tag)
+
+
+@app.route("/api/timestamp/<hash>", methods=['POST'])
+def api_add_timestamp(hash):
+    time = float(request.json["time"])
+    note = str(request.json["note"])
+    tag = f"@time={time}:{json.dumps(note)}"
+    return add_tag(hash=hash, tag=tag)
+
+
+def add_tag(hash, tag):
+    global ITEMS
+
+    to_add = {str(tag)}
+
+    preferred_service = ITEMS[hash]["service"]
+    if preferred_service not in CLIENTS:
+        CLIENTS[preferred_service] = policy.load_client(preferred_service)
+    client = CLIENTS[preferred_service]
+
+    resp = client.tag(root=None, identifiers=[hash], add=to_add, remove=None, set=None)
+    # update our local cache to keep things in sync
+    ITEMS[hash]["tags"] = sorted(set(ITEMS[hash]["tags"]) | to_add)
+
+    return repr(resp)
+
+
 @app.route('/api/cast/<hash>')
 def api_cast_start(hash):
     return cast_start(hash).text
