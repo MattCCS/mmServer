@@ -9,6 +9,8 @@ done
 DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 cd $DIR
 
+# source .env
 source .env
 . venv/bin/activate
-FLASK_APP=mmserver flask run --port=5001 --debugger --reload --host=0.0.0.0
+# FLASK_APP=mediaman-api-server flask run --port=5001 --debugger --reload --host=0.0.0.0
+python mediaman-api-server.py

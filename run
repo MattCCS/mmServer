@@ -9,4 +9,4 @@ done
 DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
 
-nohup $DIR/mmserver.sh &
+nohup $DIR/mediaman-api-server.sh &

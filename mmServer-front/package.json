@@ -9,6 +9,7 @@
     "availity-reactstrap-validation-safe": "^2.6.1",
     "bootstrap": "^4.5.2",
     "d3": "^5.16.0",
+    "forever": "^4.0.3",
     "lodash": "^4.17.20",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",

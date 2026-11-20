@@ -14,6 +14,10 @@ import sys
 import time
 import urllib.parse
 
+logging.basicConfig(format="%(asctime)s - p%(process)d/t%(thread)d - %(levelname)s - %(name)s - %(filename)s:%(lineno)s - %(funcName)s() - %(message)s")
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
 from flask import Flask, request, Request, Response, render_template
 from flask_cors import CORS
 import requests
@@ -30,11 +34,10 @@ logtools.set_level("DEBUG")
 import subtitles  # noqa
 import zipstream  # noqa
 
+import block_cache
+
 app = Flask(__name__)
 CORS(app)
-
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
 
 
 with open("certificates.json") as infile:
@@ -77,6 +80,7 @@ MEDIA_HOST_URL = os.environ["MEDIA_HOST_URL"]
 CAST_CONTROLLER_URL = os.environ.get("CAST_CONTROLLER_URL", None)
 
 ITEMS = {}
+BLOCK_CACHES = {}
 
 CONSUMPTION = 2**20
 READS = []
@@ -100,8 +104,8 @@ def mmzipview(api, hash, size, service=None, cache=True):
 
 @app.route('/reload', methods=['GET'])
 def reload_list():
-    global ITEMS, READS, CLIENTS, ZIPVIEWS
-    del ITEMS, READS, CLIENTS, ZIPVIEWS
+    global ITEMS, BLOCK_CACHES, READS, CLIENTS, ZIPVIEWS
+    del ITEMS, BLOCK_CACHES, READS, CLIENTS, ZIPVIEWS
     ITEMS = {}
 
     # force a refresh of all file lists by
@@ -116,6 +120,7 @@ def reload_list():
                 f["tags"] = sorted(set(f["tags"]) | set(ITEMS[hash]["tags"]))
             ITEMS[hash] = f  # TODO: destructive, hides tags
 
+    BLOCK_CACHES = {}
     READS = []
     CLIENTS = {}
     ZIPVIEWS = {}
@@ -136,7 +141,24 @@ def video(hash, offset, length, service=None):
     if service not in CLIENTS:
         CLIENTS[service] = policy.load_client(service)
     client = CLIENTS[service]
+
     return client.stream_range(root, hash, offset, length)
+
+    # TODO: The BlockwiseBuffer library does not have a global memory limit
+    # TODO: The BlockwiseBuffer library is not thread-safe
+    #
+    # if hash not in BLOCK_CACHES:
+    #     item = ITEMS[hash]
+    #     blocksize = 1024*1024*3 if item["service"] == "drive" else 1_000_000
+    #     cache_limit = 10 if item["service"] == "drive" else 20
+    #     BLOCK_CACHES[hash] = block_cache.BlockwiseBuffer(
+    #         source=(lambda offset, length: b"".join(client.stream_range(root, hash, offset, length))),
+    #         size=item["size"],
+    #         blocksize=blocksize,
+    #         cache_limit=cache_limit,
+    #         prefetch_blocks=0,
+    #     )
+    # return BLOCK_CACHES[hash].read(offset=offset, length=length)
 
 
 def whole(hash, service=None):
@@ -188,6 +210,7 @@ class AuthMiddleware:
 
         if cert_hash not in target_cert_hashes:
             error = "Mismatch between provided certificate and preregistered certificate hash.  Contact your administrator."
+            logger.info("cert_hash unknown: " + str(cert_hash))
             res = Response(error, mimetype= 'text/plain', status=401)
             return res(environ, start_response)
 
@@ -467,7 +490,11 @@ def stream(hash):
     #     mimetype = 'video/mp4'
     service = item["service"]
 
+    logger.info(f"[ ] Requesting {offset} to {offset + length} ({length} bytes)")
     chunk = b''.join(video(hash, offset, length, service=service))
+    # TODO: When BlockwiseBuffer is re-enable, uncomment this line:
+    # chunk = video(hash, offset, length, service=service)
+
     resp = Response(chunk, 206, mimetype=mimetype, content_type=mimetype, direct_passthrough=True)
     resp.headers.add('Content-Range', 'bytes {0}-{1}/{2}'.format(offset, offset + len(chunk) - 1, file_size))
     # resp.headers.add('Content-Type', "application/octet-stream")
@@ -482,4 +509,4 @@ def stream(hash):
 #     app.run(threaded=False)
 
 reload_list()
-app.run(threaded=False, host="0.0.0.0", port=5001)
+app.run(threaded=True, host="0.0.0.0", port=5001, debug=True)

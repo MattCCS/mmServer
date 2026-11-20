@@ -11,5 +11,5 @@ cd $DIR
 
 # source .env
 . ../venv/bin/activate
-python server.py
+python mediaman-web-server.py
 # FLASK_APP=mmserver flask run --port=5001 --debugger --reload --host=0.0.0.0
